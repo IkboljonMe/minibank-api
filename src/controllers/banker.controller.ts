@@ -5,20 +5,17 @@ import { Client } from "../entities/Client";
 
 export async function createBankerHandler(req: Request, res: Response) {
   const { firstName, lastName, email, cardNumber, employeeNumber } = req.body;
-  const banker = await PostgresData.createQueryBuilder()
-    .insert()
-    .into(Banker)
-    .values({
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      card_number: cardNumber,
-      employee_number: employeeNumber,
-    })
-    .execute();
-  if (!banker) {
-    return res.sendStatus(404);
-  }
+
+  const banker = Banker.create({
+    first_name: firstName,
+    last_name: lastName,
+    email,
+    card_number: cardNumber,
+    employee_number: employeeNumber,
+  });
+
+  await banker.save();
+
   return res.json(banker);
 }
 export async function connectBankerToClientHandler(

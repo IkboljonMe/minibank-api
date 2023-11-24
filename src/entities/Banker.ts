@@ -10,9 +10,7 @@ import {
 } from "typeorm";
 @Entity("banker")
 export class Banker extends User {
-  @Column({
-    unique: true,
-  })
+  @Column()
   employee_number: string;
   @ManyToMany((type) => Client, {
     cascade: true,
