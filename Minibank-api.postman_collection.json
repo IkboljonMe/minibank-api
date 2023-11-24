@@ -14,7 +14,7 @@
 					"script": {
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"clientId\", jsonData.identifiers[0].id);",
+							"postman.setEnvironmentVariable(\"clientId\", jsonData.client.id);",
 							""
 						],
 						"type": "text/javascript"
@@ -26,7 +26,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"tes3\",\n    \"lastName\":\"test3\",\n    \"email\":\"test3@gmail.com\",\n    \"cardNumber\":\"2226521212123\",\n    \"balance\": 50000\n\n}",
+					"raw": "{\n    \"firstName\": \"tes122as32\",\n    \"lastName\":\"tesas12t23\",\n    \"email\":\"test2323@12asgmail.com\",\n    \"cardNumber\":\"2as2221236521212124\",\n    \"balance\": 510000\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -54,7 +54,7 @@
 					"script": {
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"postman.setEnvironmentVariable(\"bankerId\", jsonData.identifiers[0].id);",
+							"postman.setEnvironmentVariable(\"bankerId\", jsonData.banker.id);",
 							""
 						],
 						"type": "text/javascript"
@@ -66,7 +66,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"bankertest\",\n    \"lastName\":\"bankertest\",\n    \"email\":\"bankertest@gmail.com\",\n    \"cardNumber\":\"722122112121\",\n    \"employeeNumber\": \"1\"\n}",
+					"raw": "{\n    \"firstName\": \"banke2121222rtwest2\",\n    \"lastName\":\"banke122rwt122est2\",\n    \"email\":\"bankert2e21212st2@gmail.com\",\n    \"cardNumber\":\"12132312132131\",\n    \"employeeNumber\": \"122\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
