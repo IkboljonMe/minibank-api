@@ -53,8 +53,12 @@ function bankerRoutes(app: Express) {
    *         description: Succes
    *       '404':
    *         description: Not found
-   *       '400':
-   *         description: Bad request
+   *       '500':
+   *         description: Not found
+   *         content:
+   *           application/json:
+   *             example:
+   *               error: Internal Server Error
    */
 
   app.post("/api/banker", checkRequestBody, createBankerHandler);

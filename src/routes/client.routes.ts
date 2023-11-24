@@ -66,7 +66,7 @@ export default clientRoutes;
  *                 email: clienttest@gmail.com
  *                 card_number: null
  *                 balance: null
- *       '404':
+ *       '500':
  *         description: Not found
  *         content:
  *           application/json:

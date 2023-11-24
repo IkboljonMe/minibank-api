@@ -14,9 +14,13 @@ export async function createBankerHandler(req: Request, res: Response) {
   });
   try {
     await banker.save();
-    return res.send(banker);
+    return res.status(200).json({
+      message: "Banker created successfully",
+      banker: banker,
+    });
   } catch (error) {
-    return res.sendStatus(404);
+    console.error({ error: "Internal Server Error" });
+    return res.status(500).json({});
   }
 }
 export async function connectBankerToClientHandler(
