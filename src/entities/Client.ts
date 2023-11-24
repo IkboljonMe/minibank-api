@@ -1,5 +1,12 @@
-import { Column, CreateDateColumn, Entity, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  UpdateDateColumn,
+} from "typeorm";
 import { User } from "./helpers/User";
+import { Transaction } from "./Transaction";
 @Entity("client")
 export class Client extends User {
   @Column({
@@ -19,11 +26,9 @@ export class Client extends User {
     age: number;
     hair_color: string;
   };
-  @Column({
-    type: "simple-array",
-    default: [],
-  })
-  family_members: string[];
+  @OneToMany(() => Transaction, (transaction) => transaction.client)
+  transactions: Transaction[];
+
   @CreateDateColumn()
   created_at: Date;
   @UpdateDateColumn()

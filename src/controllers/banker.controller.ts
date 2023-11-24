@@ -15,7 +15,6 @@ export async function createBankerHandler(req: Request, res: Response) {
       employee_number: employeeNumber,
     })
     .execute();
-  console.log(banker, "BANKER");
   if (!banker) {
     return res.sendStatus(404);
   }
