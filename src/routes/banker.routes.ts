@@ -1,6 +1,13 @@
 import { Express } from "express";
-import { createBankerHandler } from "../controllers/banker.controller";
+import {
+  connectBankerToClientHandler,
+  createBankerHandler,
+} from "../controllers/banker.controller";
 function bankerRoutes(app: Express) {
   app.post("/api/banker", createBankerHandler);
+  app.put(
+    "/api/banker/:bankerId/client/:clientId",
+    connectBankerToClientHandler
+  );
 }
 export default bankerRoutes;

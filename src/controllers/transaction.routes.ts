@@ -22,11 +22,8 @@ export async function createTransactionHanler(req: Request, res: Response) {
   await transaction.save();
   if (type === TransactionType.DEPOSIT) {
     client.balance = client.balance + parseInt(amount);
-    console.log(client.balance, "HERERERER");
     client.transactions = [transaction];
   } else if (type === TransactionType.WITHDRAW) {
-    client.balance = client.balance - parseInt(amount);
-    console.log(client.balance, "HERERERER");
     client.transactions = [transaction];
   }
   await client.save();
