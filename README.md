@@ -2,7 +2,16 @@
 # Minibalog API
 
 Minibalog API is a small TypeScript-backed server API built with Node.js, TypeScript, Express, TypeORM, and Swagger. This API is designed to be minimalistic, featuring only 4-5 endpoints that you can explore and test using the Swagger documentation provided.
+## Packages Used
 
+The Minibalog API project utilizes the following packages:
+
+- [**Node.js:**](https://nodejs.org/) JavaScript runtime for server-side development.
+- [**TypeScript:**](https://www.typescriptlang.org/) Provides strong typing for enhanced developer experience.
+- [**Express:**](https://expressjs.com/) Web framework for Node.js, used for building the server.
+- [**TypeORM:**](https://typeorm.io/) Object-Relational Mapper (ORM) for TypeScript and JavaScript.
+- [**PostgreSQL:**](https://www.postgresql.org/) Open-source relational database system.
+- [**Swagger:**](https://swagger.io/) Generates interactive API documentation.
 ## Installation
 
 1. Clone the repository:
