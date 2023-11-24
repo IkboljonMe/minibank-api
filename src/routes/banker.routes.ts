@@ -88,13 +88,13 @@ function bankerRoutes(app: Express) {
    *         content:
    *           application/json:
    *             example:
-   *               msg: Success
+   *               msg: banker connected to client
    *       '404':
    *         description: Not found
    *         content:
    *           application/json:
    *             example:
-   *               error: Not found
+   *               error: banker not connected to client
    */
   app.put(
     "/api/banker/:bankerId/client/:clientId",
