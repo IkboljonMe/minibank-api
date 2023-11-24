@@ -20,3 +20,10 @@ export async function createClientHandler(req: Request, res: Response) {
   }
   return res.json(client);
 }
+export async function deleteClientHandler(req: Request, res: Response) {
+  const { clientId } = req.params;
+
+  const response = await Client.delete(clientId);
+
+  return res.json(response);
+}
