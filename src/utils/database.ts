@@ -1,5 +1,8 @@
 import { DataSource } from "typeorm";
 import logger from "./logger";
+import { Client } from "../entities/Client";
+import { Banker } from "../entities/Banker";
+import { Transaction } from "../entities/Transaction";
 
 export default async function database() {
   try {
@@ -7,9 +10,11 @@ export default async function database() {
       type: "postgres",
       host: "localhost",
       port: 5432,
-      username: "mac",
+      username: "postgres",
       password: "1221qwwq",
-      database: "mac",
+      database: "postgres",
+      synchronize: true,
+      entities: [Client, Banker, Transaction],
     });
     postgres
       .initialize()
