@@ -15,19 +15,6 @@ export class Client extends User {
     type: "numeric",
   })
   balance: number;
-  @Column({
-    name: "active",
-    default: true,
-  })
-  is_active: boolean;
-  @Column({
-    type: "simple-json",
-    nullable: true,
-  })
-  additonal_info: {
-    age: number;
-    hair_color: string;
-  };
   @OneToMany(() => Transaction, (transaction) => transaction.client)
   transactions: Transaction[];
   @ManyToMany((type) => Banker, { cascade: true })

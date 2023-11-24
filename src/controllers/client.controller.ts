@@ -3,26 +3,22 @@ import { Client } from "../entities/Client";
 import { PostgresData } from "../utils/database";
 
 export async function createClientHandler(req: Request, res: Response) {
-  const { firstName, lastName, email, cardNumber, balance } = req.body;
-
   try {
-    const result = await PostgresData.createQueryBuilder()
-      .insert()
-      .into(Client)
-      .values({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        card_number: cardNumber,
-        balance,
-      })
-      .execute();
+    const { firstName, lastName, email, cardNumber, balance } = req.body;
 
-    const createdClient = result.generatedMaps[0] as Client;
+    const client = Client.create({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      card_number: cardNumber,
+      balance,
+    });
+
+    await client.save();
 
     return res.status(200).json({
       message: "Client created successfully",
-      client: createdClient,
+      client,
     });
   } catch (error) {
     console.error("Error creating client:", error);
@@ -32,14 +28,8 @@ export async function createClientHandler(req: Request, res: Response) {
 
 export async function deleteClientHandler(req: Request, res: Response) {
   const { clientId } = req.params;
-
   try {
-    const deleteResult = await Client.delete(clientId);
-
-    if (deleteResult.affected === 0) {
-      return res.status(404).json({ error: "Client not found" });
-    }
-
+    await Client.delete(clientId);
     return res.status(200).json({
       message: "Client deleted successfully",
     });
