@@ -5,7 +5,6 @@ import { Client } from "../entities/Client";
 
 export async function createBankerHandler(req: Request, res: Response) {
   const { firstName, lastName, email, cardNumber, employeeNumber } = req.body;
-
   const banker = Banker.create({
     first_name: firstName,
     last_name: lastName,
@@ -13,10 +12,12 @@ export async function createBankerHandler(req: Request, res: Response) {
     card_number: cardNumber,
     employee_number: employeeNumber,
   });
-
-  await banker.save();
-
-  return res.json(banker);
+  try {
+    await banker.save();
+    return res.send(banker);
+  } catch (error) {
+    return res.sendStatus(404);
+  }
 }
 export async function connectBankerToClientHandler(
   req: Request,

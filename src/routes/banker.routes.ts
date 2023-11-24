@@ -3,6 +3,7 @@ import {
   connectBankerToClientHandler,
   createBankerHandler,
 } from "../controllers/banker.controller";
+import checkRequestBody from "../middlewares/checkRequestBody";
 
 /**
  * @openapi
@@ -49,16 +50,48 @@ function bankerRoutes(app: Express) {
    *             $ref: '#/components/schemas/CreateBankerInput'
    *     responses:
    *       '200':
-   *         description: Banker created successfully
+   *         description: Succes
+   *       '404':
+   *         description: Not found
+   *       '400':
+   *         description: Bad request
+   */
+
+  app.post("/api/banker", checkRequestBody, createBankerHandler);
+  /**
+   * @openapi
+   * /api/banker/{bankerId}/client/{clientId}:
+   *   put:
+   *     tags:
+   *       - Connect Banker to Client
+   *     summary: Connect Banker to Client
+   *     parameters:
+   *       - in: path
+   *         name: bankerId
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: The ID of the banker
+   *       - in: path
+   *         name: clientId
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: The ID of the client
+   *     responses:
+   *       '200':
+   *         description: Success
    *         content:
    *           application/json:
    *             example:
-   *               message: Banker created successfully
+   *               msg: Success
    *       '404':
    *         description: Not found
+   *         content:
+   *           application/json:
+   *             example:
+   *               error: Not found
    */
-
-  app.post("/api/banker", createBankerHandler);
   app.put(
     "/api/banker/:bankerId/client/:clientId",
     connectBankerToClientHandler
