@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "a2cca8f5-4f8d-469d-bfdd-be46d976f20e",
+		"name": "Minibank-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25917716"
+	},
+	"item": [
+		{
+			"name": "Create Client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"clientId\", jsonData.identifiers[0].id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"tes3\",\n    \"lastName\":\"test3\",\n    \"email\":\"test3@gmail.com\",\n    \"cardNumber\":\"2226521212123\",\n    \"balance\": 50000\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/client",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"client"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Banker",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"bankerId\", jsonData.identifiers[0].id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"bankertest\",\n    \"lastName\":\"bankertest\",\n    \"email\":\"bankertest@gmail.com\",\n    \"cardNumber\":\"722122112121\",\n    \"employeeNumber\": \"1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/banker",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"banker"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"deposit\",\n    \"amount\":5000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/client/4/transaction",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"client",
+						"4",
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Connect Banker to Client",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/banker/{{bankerId}}/client/{{clientId}}",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"banker",
+						"{{bankerId}}",
+						"client",
+						"{{clientId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Connect Banker to Client Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"postman.setEnvironmentVariable(\"clientId\", null);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{endpoint}}/api/client/{{clientId}}",
+					"host": [
+						"{{endpoint}}"
+					],
+					"path": [
+						"api",
+						"client",
+						"{{clientId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "endpoint",
+			"value": "http://localhost:1337",
+			"type": "string"
+		},
+		{
+			"key": "clientId",
+			"value": "<<It will be set when you create client>>",
+			"type": "string"
+		},
+		{
+			"key": "bankerId",
+			"value": "<<It will be set when you create banker>>",
+			"type": "string"
+		}
+	]
+}
