@@ -1,72 +1,114 @@
+# Minibank API
 
-# Minibalog API
+This is a small bank REST API that I made with Express, TypeScript, TypeORM and PostgreSQL.
+I built it to learn TypeORM relations (one-to-many and many-to-many) and how to document an API with Swagger.
 
-Minibalog API is a small TypeScript-backed server API built with Node.js, TypeScript, Express, TypeORM, and Swagger. This API is designed to be minimalistic, featuring only 4-5 endpoints that you can explore and test using the Swagger documentation provided.
-## Packages Used
+## Features
 
-The Minibalog API project utilizes the following packages:
+- Create and delete bank clients
+- Create bankers and connect a banker to a client (many-to-many)
+- Deposit and withdraw money for a client (one-to-many transactions)
+- A withdraw can't make the balance go below 0
+- Amounts are checked: they must be positive numbers with max 2 decimal places
+- Every deposit/withdraw runs in a database transaction and locks the client row, so two requests at the same time can't break the balance
+- Swagger docs for all routes
+- A Postman collection is in `Minibank-api.postman_collection.json`
 
-- [**Node.js:**](https://nodejs.org/) JavaScript runtime for server-side development.
-- [**TypeScript:**](https://www.typescriptlang.org/) Provides strong typing for enhanced developer experience.
-- [**Express:**](https://expressjs.com/) Web framework for Node.js, used for building the server.
-- [**TypeORM:**](https://typeorm.io/) Object-Relational Mapper (ORM) for TypeScript and JavaScript.
-- [**PostgreSQL:**](https://www.postgresql.org/) Open-source relational database system.
-- [**Swagger:**](https://swagger.io/) Generates interactive API documentation.
-## Installation
+## Built with
 
-1. Clone the repository:
+- Node.js and TypeScript
+- Express
+- TypeORM
+- PostgreSQL
+- Swagger (swagger-jsdoc and swagger-ui-express)
+- pino for logging
 
-    ```bash
-    git clone git@github.com:IkboljonMe/minibank-api.git
-    cd minibalog-api
-    ```
+## How to run
 
+You need Node.js (18 or newer) and Docker (or your own PostgreSQL).
 
-2. Create a `.env` file based on `.env.example`:
+1. Clone the repo and install packages:
 
-    ```bash
-    cp .env.example .env
-    ```
+   ```bash
+   git clone https://github.com/IkboljonMe/minibank-api.git
+   cd minibank-api
+   npm install
+   ```
 
-   Edit the `.env` file and provide the necessary configuration values. For PostgreSQL, add your local database credentials:
+2. Start PostgreSQL with Docker:
 
-    ```env
-    PG_HOST=localhost
-    PG_PORT=5432
-    PG_USERNAME=your_username
-    PG_PASSWORD=your_password
-    PG_DATABASE=your_database
-    ```
+   ```bash
+   docker run -d --name minibank-pg -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:15
+   ```
 
-3. Install dependencies and run the server:
+3. Create the `.env` file:
 
-    ```bash
-    npm install
-    npm start
-    ```
+   ```bash
+   cp .env.example .env
+   ```
 
-   This will start the server. Open [http://localhost:1337/docs](http://localhost:1337/docs) to access Swagger documentation and explore the available endpoints.
+   The values in `.env.example` already work with the Docker command above.
 
-## TypeORM and PostgreSQL
+4. Start the server:
 
-TypeORM is used for efficient database connectivity and management. It is an Object-Relational Mapper (ORM) that enables seamless interaction with databases using TypeScript. In the context of Minibalog API, PostgreSQL is utilized as the database. Ensure that you have a local PostgreSQL database set up and the credentials added to the `.env` file.
+   ```bash
+   npm start
+   ```
 
-## Swagger Documentation
+   The tables are created automatically on the first start (TypeORM `synchronize`).
+   The server runs on http://localhost:1337.
 
-Explore and interact with the API using Swagger documentation. Visit [http://localhost:1337/docs](http://localhost:1337/docs) to view detailed information about available routes, request payloads, and responses. Swagger provides a user-friendly interface for testing and understanding the functionality of each endpoint.
+To check the TypeScript types you can run `npm run typecheck`.
 
-## Project Structure
+## Environment variables
 
-The project is kept minimal with 4-5 endpoints, demonstrating the use of one-to-many and many-to-many relations with TypeORM.
+| Name          | Example     | What it is                         |
+| ------------- | ----------- | ---------------------------------- |
+| `SERVER_PORT` | `1337`      | Port for the Express server        |
+| `PG_HOST`     | `localhost` | PostgreSQL host                    |
+| `PG_PORT`     | `5432`      | PostgreSQL port                    |
+| `PG_USERNAME` | `postgres`  | PostgreSQL user                    |
+| `PG_PASSWORD` | `postgres`  | PostgreSQL password                |
+| `PG_DATABASE` | `postgres`  | Database name                      |
+| `NODE_ENV`    | (empty)     | If it is `production`, TypeORM will not change the tables automatically |
 
-## Contribution
+## API routes
 
-Contributions to the project are welcome! Feel free to optimize the code, add more endpoints, and introduce validation for enhanced functionality and security.
+| Method | Route                                     | What it does                                   |
+| ------ | ----------------------------------------- | ---------------------------------------------- |
+| POST   | `/api/client`                             | Create a client (`firstName`, `lastName`, `email`, `cardNumber`, optional `balance`) |
+| DELETE | `/api/client/:clientId`                   | Delete a client and their transactions         |
+| POST   | `/api/client/:clientId/transaction`       | Deposit or withdraw (`type`: `deposit` or `withdraw`, `amount`) |
+| POST   | `/api/banker`                             | Create a banker (`firstName`, `lastName`, `email`, `cardNumber`, `employeeNumber`) |
+| PUT    | `/api/banker/:bankerId/client/:clientId`  | Connect a banker to a client                   |
 
-## TODO
+Example deposit:
 
- - [ ] Optimize code
- - [ ] Add more endpoints
- - [ ] Implement input validation
+```bash
+curl -X POST http://localhost:1337/api/client/1/transaction \
+  -H "Content-Type: application/json" \
+  -d '{"type": "deposit", "amount": 50}'
+```
 
-Feel free to contribute and make Minibalog API even better!
+Errors come back as JSON like `{"error": "Insufficient funds"}` with status 400, 404 or 409.
+
+## Swagger docs
+
+When the server is running, open http://localhost:1337/docs.
+The raw OpenAPI JSON is at http://localhost:1337/docs.json.
+
+## Project structure
+
+```
+src/
+  app.ts            starts the server
+  controllers/      route handlers (client, banker, transaction)
+  entities/         TypeORM entities (Client, Banker, Transaction)
+  middlewares/      request body check
+  routes/           Express routes with Swagger comments
+  utils/            database connection, logger, swagger setup
+```
+
+---
+
+Made by [IkboljonMe](https://github.com/IkboljonMe)
