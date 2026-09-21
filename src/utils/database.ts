@@ -10,18 +10,12 @@ export const PostgresData: DataSource = new DataSource({
   username: process.env.PG_USERNAME,
   password: process.env.PG_PASSWORD,
   database: process.env.PG_DATABASE,
-  synchronize: true,
+  // creates tables from the entities, don't use this on a real production db
+  synchronize: process.env.NODE_ENV !== "production",
   entities: [Client, Banker, Transaction],
 });
 
 export default async function database() {
-  PostgresData.initialize()
-    .then(() => {
-      logger.info(
-        `PostgreSQL is runnig on port number => ${process.env.PG_PORT}`
-      );
-    })
-    .catch((error) =>
-      logger.error(error, "Error while intializing DataSource")
-    );
+  await PostgresData.initialize();
+  logger.info(`PostgreSQL is running on port number => ${process.env.PG_PORT}`);
 }

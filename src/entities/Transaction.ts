@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Client } from "./Client";
+import { moneyColumn } from "./helpers/money";
 export enum TransactionType {
   DEPOSIT = "deposit",
   WITHDRAW = "withdraw",
@@ -21,10 +22,8 @@ export class Transaction extends BaseEntity {
     type: "enum",
     enum: TransactionType,
   })
-  type: string;
-  @Column({
-    type: "numeric",
-  })
+  type: TransactionType;
+  @Column(moneyColumn)
   amount: number;
   @ManyToOne(() => Client, (client) => client.transactions, {
     onDelete: "CASCADE",

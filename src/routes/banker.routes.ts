@@ -29,10 +29,10 @@ import checkRequestBody from "../middlewares/checkRequestBody";
  *           default: bankertest@gmail.com
  *         cardNumber:
  *           type: string
- *           default: 1111111223
+ *           default: "1111111223"
  *         employeeNumber:
  *           type: string
- *           default: 1
+ *           default: "1"
  */
 function bankerRoutes(app: Express) {
   /**
@@ -49,19 +49,31 @@ function bankerRoutes(app: Express) {
    *           schema:
    *             $ref: '#/components/schemas/CreateBankerInput'
    *     responses:
-   *       '200':
-   *         description: Succes
-   *       '404':
-   *         description: Not found
+   *       '201':
+   *         description: Banker created successfully
+   *       '400':
+   *         description: Missing or invalid fields
+   *       '409':
+   *         description: Email or card number is already used
    *       '500':
-   *         description: Not found
+   *         description: Server error
    *         content:
    *           application/json:
    *             example:
    *               error: Internal Server Error
    */
 
-  app.post("/api/banker", checkRequestBody, createBankerHandler);
+  app.post(
+    "/api/banker",
+    checkRequestBody([
+      "firstName",
+      "lastName",
+      "email",
+      "cardNumber",
+      "employeeNumber",
+    ]),
+    createBankerHandler
+  );
   /**
    * @openapi
    * /api/banker/{bankerId}/client/{clientId}:
@@ -89,12 +101,14 @@ function bankerRoutes(app: Express) {
    *           application/json:
    *             example:
    *               msg: banker connected to client
+   *       '400':
+   *         description: Invalid banker or client id
    *       '404':
    *         description: Not found
    *         content:
    *           application/json:
    *             example:
-   *               error: banker not connected to client
+   *               error: banker or client not found
    */
   app.put(
     "/api/banker/:bankerId/client/:clientId",

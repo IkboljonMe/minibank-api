@@ -3,9 +3,14 @@ import {
   createClientHandler,
   deleteClientHandler,
 } from "../controllers/client.controller";
+import checkRequestBody from "../middlewares/checkRequestBody";
 
 function clientRoutes(app: Express) {
-  app.post("/api/client", createClientHandler);
+  app.post(
+    "/api/client",
+    checkRequestBody(["firstName", "lastName", "email", "cardNumber"]),
+    createClientHandler
+  );
   app.delete("/api/client/:clientId", deleteClientHandler);
 }
 export default clientRoutes;
@@ -21,7 +26,6 @@ export default clientRoutes;
  *         - lastName
  *         - email
  *         - cardNumber
- *         - balance
  *       properties:
  *         firstName:
  *           type: string
@@ -34,9 +38,10 @@ export default clientRoutes;
  *           default: clienttest@gmail.com
  *         cardNumber:
  *           type: string
- *           default: 12121212
+ *           default: "12121212"
  *         balance:
  *           type: number
+ *           description: Optional, starts at 0 if you leave it out
  *           default: 10000
  */
 /**
@@ -53,7 +58,7 @@ export default clientRoutes;
  *           schema:
  *             $ref: '#/components/schemas/CreateClientInput'
  *     responses:
- *       '200':
+ *       '201':
  *         description: Client created successfully
  *         content:
  *           application/json:
@@ -64,10 +69,14 @@ export default clientRoutes;
  *                 first_name: clienttest
  *                 last_name: clienttest
  *                 email: clienttest@gmail.com
- *                 card_number: null
- *                 balance: null
+ *                 card_number: "12121212"
+ *                 balance: 10000
+ *       '400':
+ *         description: Missing or invalid fields
+ *       '409':
+ *         description: Email or card number is already used
  *       '500':
- *         description: Not found
+ *         description: Server error
  *         content:
  *           application/json:
  *             example:
@@ -94,6 +103,8 @@ export default clientRoutes;
  *           application/json:
  *             example:
  *               message: Client deleted successfully
+ *       '400':
+ *         description: Invalid client id
  *       '404':
  *         description: Not found
  *         content:

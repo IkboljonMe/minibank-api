@@ -14,10 +14,11 @@ function transactionRoutes(app: Express) {
    *       properties:
    *         type:
    *           type: string
-   *           enum: [DEPOSIT, WITHDRAW]
+   *           enum: [deposit, withdraw]
    *         amount:
    *           type: number
-   *           default: 0
+   *           description: Positive number, max 2 decimal places
+   *           default: 50
    */
   /**
    * @openapi
@@ -40,7 +41,7 @@ function transactionRoutes(app: Express) {
    *           schema:
    *             $ref: '#/components/schemas/CreateTransactionInput'
    *     responses:
-   *       '200':
+   *       '201':
    *         description: Transaction created successfully
    *         content:
    *           application/json:
@@ -51,13 +52,18 @@ function transactionRoutes(app: Express) {
    *                 first_name: clienttest
    *                 last_name: clienttest
    *                 email: clienttest@gmail.com
-   *                 card_number: null
-   *                 balance: 100  # Updated balance based on the transaction
-   *                 transactions:   # Updated transactions array
-   *                   - id: 1
-   *                     amount: 50
-   *                     type: deposit
-   *                     client_id: 1
+   *                 card_number: "12121212"
+   *                 balance: 10050
+   *               transaction:
+   *                 id: 1
+   *                 type: deposit
+   *                 amount: 50
+   *       '400':
+   *         description: Invalid type or amount, or not enough money for a withdraw
+   *         content:
+   *           application/json:
+   *             example:
+   *               error: Insufficient funds
    *       '404':
    *         description: Not found
    *         content:

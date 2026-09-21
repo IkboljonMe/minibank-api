@@ -12,9 +12,7 @@ import {
 export class Banker extends User {
   @Column()
   employee_number: string;
-  @ManyToMany((type) => Client, {
-    cascade: true,
-  })
+  @ManyToMany(() => Client, (client) => client.bankers)
   @JoinTable({
     name: "bankers_clients",
     joinColumn: {

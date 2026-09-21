@@ -1,19 +1,23 @@
 import { NextFunction, Request, Response } from "express";
 
-function checkRequestBody(req: Request, res: Response, next: NextFunction) {
-  const bodyProperties = req.body;
+// Returns a middleware that checks that every field in `fields`
+// is a non-empty string in the request body.
+function checkRequestBody(fields: string[]) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const body = req.body || {};
+    const missing = fields.filter(
+      (field) =>
+        typeof body[field] !== "string" || body[field].trim().length === 0
+    );
 
-  // Check if any property in the request body is false
-  const hasFalseValue = Object.values(bodyProperties).some(
-    (value) => value === false
-  );
+    if (missing.length > 0) {
+      return res
+        .status(400)
+        .json({ error: `Missing or invalid fields: ${missing.join(", ")}` });
+    }
 
-  if (hasFalseValue) {
-    return res.status(400).json({ error: "Invalid request body,bad request" });
-  }
-
-  // If all properties are valid, proceed to the next middleware or route handler
-  next();
+    return next();
+  };
 }
 
 export default checkRequestBody;
